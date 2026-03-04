@@ -6,25 +6,32 @@ from glob import glob
 from typing import List, Dict
 
 from pyrogram.types import CallbackQuery
-
 from pyrogram.types import (
     ReplyKeyboardMarkup, InlineKeyboardMarkup, InlineKeyboardButton)
 from consts import group_types
 from dbh import dbcGeneral, dbGeneral
 
-enabled_locales = [
-    "ar-SA",   # Arabic
-    "en-US",   # English (United States)
-]
 
-default_language = "ar-SA"
+def _normalize_chat_type(chat_type) -> str:
+    """Convert pyrogram 2.x ChatType enum to string for compatibility."""
+    ct = str(chat_type).lower()
+    if "private" in ct:
+        return "private"
+    elif "supergroup" in ct:
+        return "supergroup"
+    elif "group" in ct:
+        return "group"
+    elif "channel" in ct:
+        return "channel"
+    return ct
 
 
-def set_db_lang(chat_id: int, chat_type: str, lang_code: str):
+def set_db_lang(chat_id: int, chat_type, lang_code: str):
+    chat_type = _normalize_chat_type(chat_type)
     if chat_type == "private":
         dbcGeneral.execute("UPDATE users SET chat_lang = ? WHERE user_id = ?", (lang_code, chat_id))
         dbGeneral.commit()
-    elif chat_type in group_types:  # groups and supergroups share the same table
+    elif chat_type in group_types:
         dbcGeneral.execute("UPDATE groups SET chat_lang = ? WHERE chat_id = ?", (lang_code, chat_id))
         dbGeneral.commit()
     elif chat_type == "channel":
@@ -34,18 +41,19 @@ def set_db_lang(chat_id: int, chat_type: str, lang_code: str):
         raise TypeError("Unknown chat type '%s'." % chat_type)
 
 
-def get_db_lang(chat_id: int, chat_type: str) -> str:
+def get_db_lang(chat_id: int, chat_type) -> str:
+    chat_type = _normalize_chat_type(chat_type)
     if chat_type == "private":
         dbcGeneral.execute("SELECT chat_lang FROM users WHERE user_id = ?", (chat_id,))
         ul = dbcGeneral.fetchone()
-    elif chat_type in group_types:  # groups and supergroups share the same table
+    elif chat_type in group_types:
         dbcGeneral.execute("SELECT chat_lang FROM groups WHERE chat_id = ?", (chat_id,))
         ul = dbcGeneral.fetchone()
     elif chat_type == "channel":
         dbcGeneral.execute("SELECT chat_lang FROM channels WHERE chat_id = ?", (chat_id,))
         ul = dbcGeneral.fetchone()
     else:
-        raise TypeError("Unknown chat type '%s'." % chat_type)
+        ul = None
     return ul[0] if ul else None
 
 
@@ -59,6 +67,13 @@ def cache_localizations(files: List[str]) -> Dict[str, Dict[str, Dict[str, str]]
         ldict[lname][pname] = dic
     return ldict
 
+
+enabled_locales = [
+    "ar-SA",
+    "en-US",
+]
+
+default_language = "ar-SA"
 
 jsons: List[str] = []
 
@@ -82,15 +97,15 @@ def get_lang(message) -> str:
     else:
         chat = message.chat
 
-    lang = get_db_lang(chat.id, chat.type)
+    chat_type_str = _normalize_chat_type(chat.type)
+    lang = get_db_lang(chat.id, chat_type_str)
 
-    if chat.type == "private":
-        lang = lang or message.from_user.language_code or default_language
+    if chat_type_str == "private":
+        lang = lang or getattr(message.from_user, 'language_code', None) or default_language
     else:
         lang = lang or default_language
-    # User has a language_code without hyphen
+
     if len(lang.split("-")) == 1:
-        # Try to find a language that starts with the provided language_code
         for locale_ in enabled_locales:
             if locale_.startswith(lang):
                 lang = locale_
@@ -110,11 +125,8 @@ def use_chat_lang(context=None):
         @wraps(func)
         async def wrapper(client, message):
             lang = get_lang(message)
-
             dic = langdict.get(lang, langdict[default_language])
-
             lfunc = partial(get_locale_string, dic.get(context, {}), lang, context)
             return await func(client, message, lfunc)
-
         return wrapper
     return decorator
