@@ -1,0 +1,7 @@
+[build]
+builder = "DOCKERFILE"
+
+[deploy]
+startCommand = "ntpdate -u pool.ntp.org || true && python bot.py"
+restartPolicyType = "ON_FAILURE"
+restartPolicyMaxRetries = 10

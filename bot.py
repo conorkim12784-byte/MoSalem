@@ -1,10 +1,17 @@
 import logging
+import subprocess
 
 from pyrogram import Client, idle
 from pyrogram.errors.exceptions.bad_request_400 import BadRequest
 
 from config import TOKEN, disabled_plugins, log_chat, API_ID, API_HASH
 from utils import get_restarted, del_restarted
+
+# Fix time sync issue on servers
+try:
+    subprocess.run(["ntpdate", "-u", "pool.ntp.org"], capture_output=True, timeout=10)
+except Exception:
+    pass
 
 with open("version.txt") as f:
     version = f.read().strip()
@@ -18,7 +25,6 @@ client = Client("Cv_TALASHNY", API_ID, API_HASH,
 
 with client:
     if __name__ == "__main__":
-        # client.me = client.get_me()
         wr = get_restarted()
         xxx = "Cv_TALASHNY"
         del_restarted()
