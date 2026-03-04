@@ -21,7 +21,7 @@ async def get_backup2(c: Client, m: Message):
 
 
 async def upper_backup(c: Client, m: Message):
-    if re.match("^TALASHNY\.db$", str(m.reply_to_message.document.file_name)):
+    if re.match(r"^TALASHNY\.db$", str(m.reply_to_message.document.file_name)):
         await c.download_media(m.reply_to_message, file_name="./TALASHNY.db")
         os.chmod('TALASHNY.db', 0o0777)
         await m.reply_text("⌔ تم رفع النسخه الاحتياطيه الاساسيه\n√", reply_to_message_id=m.message_id)

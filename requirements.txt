@@ -7,6 +7,6 @@ regex
 telegraph
 requests
 asyncstdlib
-apscheduler
+apscheduler==3.10.4
 pytz
 meval
