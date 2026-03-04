@@ -26,7 +26,6 @@ from plugins.hals import *
 from plugins.ids import ids, get_mypoint, get_mymessage, get_mycontact
 from plugins.keyboard_private import lock_lockbroadcast_test, get_num_for_user_and_group, lock_lockgenyoutube_test
 from plugins.locks import *
-from plugins.music import music 
 from plugins.quran import *
 from plugins.ghnely import *
 from plugins.reply import *
@@ -39,7 +38,6 @@ from plugins.wait import wait_all
 from plugins.weather import weather
 from plugins.welcome_bye_laws import lock_lockwelcome_open, lock_lockwelcome_test, lock_lockwelcome_close, \
     lock_lockbye_open, lock_lockbye_close, lock_lockbye_test
-from plugins.youtube import youtube_main
 from pyrogram.errors import UserAlreadyParticipant, UserNotParticipant
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, Message
 import datetime
@@ -3079,30 +3077,6 @@ async def basegroup(c: Client, m: Message):
         await quran(c, m)
         return
 
-    if m.text == "اغاني 🎧" or m.text == "اغاني" or m.text == "الاغاني" or m.text == "الاغانى":
-        if await lock_music_test(m) and not constractors(m):
-            await m.reply_text("⌔ الاغاني مقفوله اطلب من الادمن فتحها\n√",
-                               reply_to_message_id=m.message_id)
-            return
-        else:
-            await music(c, m)
-            return
-
-    if m.text == "فتح الاغانى" or m.text == "فتح الاغاني":
-        if admin(m):
-            await lock_music_open(m)
-        else:
-            await m.reply_text("⌔ يجب ان تكون برتبه ادمن على الاقل لاستخدام هذا الامر\n√",
-                               reply_to_message_id=m.message_id)
-            return
-
-    if m.text == "قفل الاغانى" or m.text == "قفل الاغاني":
-        if admin(m):
-            await lock_music_close(m)
-        else:
-            await m.reply_text("⌔ يجب ان تكون برتبه ادمن على الاقل لاستخدام هذا الامر\n√",
-                               reply_to_message_id=m.message_id)
-            return
 
     if m.text == "زخرفه" or m.text == "زخرفه ✒" or m.text == "الزخرفه":
         if await lock_zhrafa_test(m) and not constractors(m):
@@ -3168,16 +3142,7 @@ async def basegroup(c: Client, m: Message):
             return
 
     if m.text == "يوتيوب" or m.text == "اليوتيوب" or m.text == "يوتيوب 🎥":
-        if await lock_youtube_test(m) and not constractors(m):
-            await m.reply_text("⌔ اليوتيوب مقفول اطلب من الادمن فتحه",
-                               reply_to_message_id=m.message_id)
-            return
-        else:
-            if await lock_lockgenyoutube_test():
-                await youtube_main(c, m)
-                return
-            else:
-                await m.reply_text("⌔ عذراا اليوتوب فى الصيانه حاليا⚠️\n√", reply_to_message_id=m.message_id)
+        await m.reply_text("⌔ اليوتوب غير متاح في هذا السورس⚠️\n√", reply_to_message_id=m.message_id)
                 return
 
     if m.text == "فتح اليوتيوب":

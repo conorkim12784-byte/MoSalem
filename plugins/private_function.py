@@ -20,7 +20,6 @@ from plugins.games import games
 from plugins.general import replay_global_test, gunbanuser, gunbanrep, gmuteuser, gmuterep, gbanuser, gbanrep
 from plugins.ids import ids_private
 from plugins.keyboard_private import *
-from plugins.music import music
 from plugins.private_ban import privbanrep, privbanuser, privunbanrep, privunbanuser, priban_user_test
 from plugins.quran import quran
 from plugins.ghnely import ghnely
@@ -30,7 +29,6 @@ from plugins.rwayat import rwaiat
 from plugins.sudos import test_speed, upgrade, restart
 from plugins.wait import wait_all
 from plugins.weather import weather
-from plugins.youtube import youtube_main
 
 
 @Client.on_message(filters.private & ~filters.regex("^/"))
@@ -722,7 +720,7 @@ async def baseprivate(c: Client, m: Message):
         return
 
     if m.text == "اغانى" or m.text == "اغاني":
-        await music(c, m)
+        await m.reply_text("⌔ الاغاني غير متاحه في هذا السورس⚠️\n√", reply_to_message_id=m.message_id)
         return
 
     if m.text == "زخرفه" or m.text == "زخرفة" or m.text == "الزخرفه":
@@ -740,12 +738,8 @@ async def baseprivate(c: Client, m: Message):
         return
 
     if m.text == "يوتيوب" or m.text == "اليوتيوب":
-        if await lock_lockgenyoutube_test():
-            await youtube_main(c, m)
-            return
-        else:
-            await m.reply_text("⌔ عذراا اليوتوب فى الصيانه حاليا⚠️\n√", reply_to_message_id=m.message_id)
-            return
+        await m.reply_text("⌔ اليوتوب غير متاح في هذا السورس⚠️\n√", reply_to_message_id=m.message_id)
+        return
 
     if m.text == "انا فين":
         await m.reply_text(await get_Rank_ana_feen(m, c),

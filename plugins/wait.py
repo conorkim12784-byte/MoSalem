@@ -11,7 +11,6 @@ from plugins.ids import get_mypoint
 from plugins.keyboard_private import broadcast_group, broadcast_user, broadcast_forward_group, broadcast_forward_user, \
     broadcast_pin_user, broadcast_forward_pin_user
 from plugins.sudos import restart
-from plugins.youtube import ntagyoutube, downfromlink, youttsearch, youttsearch_video
 from plugins.zhrafa import zahrafa
 
 
@@ -212,26 +211,6 @@ async def wait_all(c: Client, m: Message):
         if wait_test(m, "zhrfa"):
             del_db_wait("zhrfa")
             await zahrafa(c, m)
-            return
-
-        if wait_test(m, "ntagyoutube"):
-            del_db_wait("ntagyoutube")
-            await ntagyoutube(m)
-            return
-
-        if wait_test(m, "downyout"):
-            del_db_wait("downyout")
-            await downfromlink(m)
-            return
-
-        if wait_test(m, "searchyout"):
-            del_db_wait("searchyout")
-            await youttsearch(m)
-            return
-
-        if wait_test(m, "searchyoutvideo"):
-            del_db_wait("searchyoutvideo")
-            await youttsearch_video(m)
             return
 
         if wait_test(m, "gbroadcast"):
