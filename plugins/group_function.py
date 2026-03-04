@@ -3143,7 +3143,7 @@ async def basegroup(c: Client, m: Message):
 
     if m.text == "يوتيوب" or m.text == "اليوتيوب" or m.text == "يوتيوب 🎥":
         await m.reply_text("⌔ اليوتوب غير متاح في هذا السورس⚠️\n√", reply_to_message_id=m.message_id)
-                return
+        return
 
     if m.text == "فتح اليوتيوب":
         if admin(m):

@@ -1,12 +1,12 @@
 import datetime
 import time
 import pyrogram
-from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
 from pytz import utc
 
 
-scheduler = BackgroundScheduler(timezone=utc)
+scheduler = AsyncIOScheduler(timezone=utc)
 scheduler.start()
 flood = dict()
 

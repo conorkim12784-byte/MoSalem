@@ -4,9 +4,9 @@ import requests
 from pyrogram import Client, filters
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, Message, CallbackQuery
 from config import TOKEN, get_bot_information
-from database import set_db_waitg, get_db_waitg, del_db_waitg, set_db_mypointgame
+from database import set_db_waitg, get_db_waitg, del_db_waitg, set_db_mypointgame, set_db_wait
 from plugins.general import waitg_test
-from plugins.locks import lock_games_test, set_db_wait, lock_myphoto_test
+from plugins.locks import lock_games_test, lock_myphoto_test
 from plugins.rtp_function import sudo2
 
 
